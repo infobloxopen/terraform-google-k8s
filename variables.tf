@@ -4,6 +4,13 @@ variable "enable_google" {
   default     = true
 }
 
+variable "gcp_credentials" {
+  description = "Service account JSON key file contents"
+  type        = string
+  sensitive   = true
+  default     = file("account.json")
+}
+
 variable "enable_regional_cluster" {
   description = "Create regional GKE cluster instead of zonal"
   type        = bool
@@ -22,9 +29,9 @@ variable "gcp_project" {
 }
 
 variable "gcp_region" {
-  description = "GCP region (e.g. `europe-west3-c` => Frankfurt)"
+  description = "GCP region (e.g. `us-west1` => Oregon, USA)"
   type        = string
-  default     = "europe-west3"
+  default     = "us-west1"
 }
 
 variable "gke_name" {

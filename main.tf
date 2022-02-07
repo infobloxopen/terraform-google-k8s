@@ -21,7 +21,7 @@ data "http" "workstation-external-ip" {
 
 locals {
   count                     = var.enable_google ? 1 : 0
-  workstation-external-cidr = "${chomp(data.http.workstation-external-ip.0.body)}/32"
+  workstation-external-cidr = var.enable_google ? "${chomp(data.http.workstation-external-ip.0.body)}/32" : null
 }
 
 # Get available zones for Google Cloud region
@@ -61,14 +61,14 @@ resource "google_container_cluster" "gke" {
     http_load_balancing {
       disabled = false
     }
-    //    horizontal_pod_autoscaling {
-    //      disabled = true
-    //    }
+    horizontal_pod_autoscaling {
+      disabled = false
+    }
   }
 
   master_auth {
-    username = random_id.username[count.index].hex
-    password = random_id.password[count.index].hex
+    # username = random_id.username[count.index].hex
+    # password = random_id.password[count.index].hex
 
     client_certificate_config {
       issue_client_certificate = true
@@ -119,8 +119,8 @@ data "template_file" "kubeconfig" {
   vars = {
     cluster_name    = google_container_cluster.gke.0.name
     endpoint        = google_container_cluster.gke.0.endpoint
-    user_name       = google_container_cluster.gke.0.master_auth.0.username
-    user_password   = google_container_cluster.gke.0.master_auth.0.password
+    # user_name       = google_container_cluster.gke.0.master_auth.0.username
+    # user_password   = google_container_cluster.gke.0.master_auth.0.password
     cluster_ca      = google_container_cluster.gke.0.master_auth.0.cluster_ca_certificate
     client_cert     = google_container_cluster.gke.0.master_auth.0.client_certificate
     client_cert_key = google_container_cluster.gke.0.master_auth.0.client_key
