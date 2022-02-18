@@ -130,5 +130,5 @@ data "template_file" "kubeconfig" {
 resource "local_file" "kubeconfiggke" {
   count    = var.enable_google ? 1 : 0
   content  = data.template_file.kubeconfig.0.rendered
-  filename = "${path.module}/kubeconfig_gke"
+  filename = var.kubeconfig
 }

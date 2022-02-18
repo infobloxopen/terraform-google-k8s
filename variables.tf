@@ -1,3 +1,8 @@
+variable "kubeconfig" {
+  description = "Specify the location of the kubeconfig"
+  type        = string
+}
+
 variable "enable_google" {
   description = "Enable / Disable Google Cloud k8s (e.g. `true`)"
   type        = bool
