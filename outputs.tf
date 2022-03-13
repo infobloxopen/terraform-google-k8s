@@ -1,5 +1,4 @@
-
-output "kubeconfig_path_gke" {
+output "kubeconfig_path" {
   value = local_file.kubeconfiggke.0.filename
 }
 

@@ -3,12 +3,6 @@ variable "kubeconfig" {
   type        = string
 }
 
-variable "enable_google" {
-  description = "Enable / Disable Google Cloud k8s (e.g. `true`)"
-  type        = bool
-  default     = true
-}
-
 variable "gcp_credentials" {
   description = "Service account JSON key file contents"
   type        = string

@@ -1,32 +1,26 @@
 resource "random_id" "cluster_name" {
-  count       = var.enable_google ? 1 : 0
   byte_length = 6
 }
 
 resource "random_id" "username" {
-  count       = var.enable_google ? 1 : 0
   byte_length = 14
 }
 
 resource "random_id" "password" {
-  count       = var.enable_google ? 1 : 0
   byte_length = 18
 }
 
 ## Get your workstation external IPv4 address:
 data "http" "workstation-external-ip" {
-  count = var.enable_google ? 1 : 0
   url   = "http://ipv4.icanhazip.com"
 }
 
 locals {
-  count                     = var.enable_google ? 1 : 0
   workstation-external-cidr = var.enable_google ? "${chomp(data.http.workstation-external-ip.0.body)}/32" : null
 }
 
 # Get available zones for Google Cloud region
 data "google_compute_zones" "available" {
-  count   = var.enable_google ? 1 : 0
   project = var.gcp_project
   region  = var.gcp_region
   status  = "UP"
@@ -34,13 +28,11 @@ data "google_compute_zones" "available" {
 
 # Get latest version available in the given zone
 data "google_container_engine_versions" "current" {
-  count    = var.enable_google ? 1 : 0
   project  = var.gcp_project
   location = data.google_compute_zones.available[count.index].names[0]
 }
 
 resource "google_container_cluster" "gke" {
-  count              = var.enable_google ? 1 : 0
   name               = "${var.gke_name}-${random_id.cluster_name[count.index].hex}"
   location           = var.enable_regional_cluster ? var.gcp_region : data.google_compute_zones.available[count.index].names[0]
   project            = var.gcp_project
@@ -85,7 +77,6 @@ resource "google_container_cluster" "gke" {
 }
 
 resource "google_container_node_pool" "nodepool" {
-  count      = var.enable_google ? 1 : 0
   project    = var.gcp_project
   name       = var.gke_pool_name
   location   = var.enable_regional_cluster ? var.gcp_region : data.google_compute_zones.available[count.index].names[0]
@@ -113,7 +104,6 @@ resource "google_container_node_pool" "nodepool" {
 }
 
 data "template_file" "kubeconfig" {
-  count    = var.enable_google ? 1 : 0
   template = file("${path.module}/gke_kubeconfig-template.yaml")
 
   vars = {
@@ -128,7 +118,6 @@ data "template_file" "kubeconfig" {
 }
 
 resource "local_file" "kubeconfiggke" {
-  count    = var.enable_google ? 1 : 0
   content  = data.template_file.kubeconfig.0.rendered
   filename = var.kubeconfig
 }
