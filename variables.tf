@@ -1,8 +1,3 @@
-variable "kubeconfig" {
-  description = "Specify the location of the kubeconfig"
-  type        = string
-}
-
 variable "gcp_credentials" {
   description = "Service account JSON key file contents"
   type        = string
@@ -14,12 +9,6 @@ variable "enable_regional_cluster" {
   description = "Create regional GKE cluster instead of zonal"
   type        = bool
   default     = false
-}
-
-variable "random_cluster_suffix" {
-  description = "Random 6 byte hex suffix for cluster name"
-  type        = string
-  default     = ""
 }
 
 variable "gcp_project" {
